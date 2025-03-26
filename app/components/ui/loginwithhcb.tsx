@@ -50,7 +50,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     
     React.useEffect(() => {
       if (buttonRef.current) {
-        const heightScale = 0.95;
+        const heightScale = 0.96;
         setScaleValue(heightScale);
       }
     }, []);
@@ -67,8 +67,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         whileTap={{ scale: scaleValue }}
         transition={{ 
           type: "spring", 
-          stiffness: 500, 
-          damping: 30 
+          stiffness: 700, 
+          damping: 40,
         }}
         {...props}
       >

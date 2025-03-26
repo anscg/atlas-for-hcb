@@ -53,7 +53,7 @@ export default function Index() {
             Continue with HCB
           </Button>
           <p className="text-xs text-left text-stone-400 dark:text-stone-400">
-            By clicking "Continue with HCB", you acknowledge that you have read, understood, and agree to Atlas' <a href="#" className="underline hover:text-gray-700 dark:hover:text-gray-300">Terms & Conditions</a> and <a href="#" className="underline hover:text-gray-700 dark:hover:text-gray-300">Privacy Policy</a>
+            By clicking "Continue with HCB", you acknowledge that you have read, understood, and agree to Atlas' <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="underline hover:text-stone-500 dark:hover:text-stone-300">Terms & Conditions</a> and <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="underline hover:text-stone-500 dark:hover:text-stone-300">Privacy Policy</a>
           </p>
         </div>
       </div>

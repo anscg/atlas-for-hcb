@@ -1,53 +1,61 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, type MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
+import { getHcbConfig } from "~/env.server";
+import { Button } from "~/components/ui/loginwithhcb";
+
+export const loader = async () => {
+  const config = getHcbConfig();
+  return json({
+    apiBase: config.apiBase,
+    clientId: config.clientId,
+    redirectUri: config.redirectUri,
+  });
+};
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Atlas for HCB" },
+    { name: "description", content: "Welcome to Atlas!" },
   ];
 };
 
 export default function Index() {
+  const config = useLoaderData<typeof loader>();
+  const discovery = {
+    authorizationEndpoint: `${config.apiBase}/oauth/authorize`,
+    tokenEndpoint: `${config.apiBase}/oauth/token`,
+    revocationEndpoint: `${config.apiBase}/oauth/revoke`,
+  };
+
+  const handleLogin = () => {
+    const params = new URLSearchParams({
+      client_id: config.clientId,
+      redirect_uri: config.redirectUri,
+      response_type: 'code',
+      scope: 'read write',
+    });
+
+    window.location.href = `${discovery.authorizationEndpoint}?${params.toString()}`;
+  };
+
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="flex flex-col items-center gap-16">
+      <div className="flex flex-col items-center gap-16 w-full max-w-md px-4">
         <header className="flex flex-col items-center gap-9">
           <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
-            Welcome to <span className="sr-only">Remix</span>
+            Welcome to Atlas
           </h1>
-          <div className="h-[144px] w-[434px]">
-            <img
-              src="/logo-light.png"
-              alt="Remix"
-              className="block w-full dark:hidden"
-            />
-            <img
-              src="/logo-dark.png"
-              alt="Remix"
-              className="hidden w-full dark:block"
-            />
-          </div>
         </header>
-        <nav className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700">
-          <p className="leading-6 text-gray-700 dark:text-gray-200">
-            What&apos;s next?
+        <div className="flex flex-col items-center gap-4">
+          <Button
+            onClick={handleLogin}
+          >
+            Continue with HCB
+          </Button>
+          <p className="text-xs text-left text-stone-400 dark:text-stone-400">
+            By clicking "Continue with HCB", you acknowledge that you have read, understood, and agree to Atlas' <a href="#" className="underline hover:text-gray-700 dark:hover:text-gray-300">Terms & Conditions</a> and <a href="#" className="underline hover:text-gray-700 dark:hover:text-gray-300">Privacy Policy</a>
           </p>
-          <ul>
-            {resources.map(({ href, text, icon }) => (
-              <li key={href}>
-                <a
-                  className="group flex items-center gap-3 self-stretch p-3 leading-normal text-blue-700 hover:underline dark:text-blue-500"
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {icon}
-                  {text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        </div>
       </div>
     </div>
   );

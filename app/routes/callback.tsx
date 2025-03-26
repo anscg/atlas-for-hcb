@@ -20,9 +20,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     const tokenData = await tokenResponse.json();
     
-    // Here you would typically store the token in a session or cookie
-    // For now, we'll just redirect back to the home page
-    return redirect("/");
+    // Redirect to success page
+    return redirect("/login-success");
   }
 
   return redirect("/?error=no_code");

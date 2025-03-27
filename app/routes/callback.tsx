@@ -19,9 +19,11 @@ export const loader: LoaderFunction = async ({ request }) => {
     });
 
     const tokenData = await tokenResponse.json();
+
+    console.log(tokenData);
     
-    // Redirect to success page
-    return redirect("/login-success");
+    // Redirect to home page (doesn't exist currently)
+    return redirect("/home");
   }
 
   return redirect("/?error=no_code");

@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - HCB_API_BASE=${HCB_API_BASE}
+      - HCB_CLIENT_ID=${HCB_CLIENT_ID}
+      - HCB_REDIRECT_URI=${HCB_REDIRECT_URI}
+    restart: unless-stopped
+    volumes:
+      - ./public:/app/public

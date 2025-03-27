@@ -23,6 +23,8 @@ export async function action({ request }: ActionFunctionArgs) {
     scope: 'read write',
   });
 
+  await new Promise(r => setTimeout(r, 2000));
+
   return json({ authUrl: `${authorizationEndpoint}?${params.toString()}` });
 }
 
@@ -43,7 +45,8 @@ export default function Index() {
   
   // Redirect when the auth URL is available
   if (fetcher.data?.authUrl) {
-    window.location.href = fetcher.data.authUrl;
+    console.log(fetcher.data.authUrl);
+    window.location.href = "https://google.com";
   }
 
   return (

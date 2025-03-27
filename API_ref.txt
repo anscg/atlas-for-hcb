@@ -1,0 +1,125 @@
+User Endpoints
+GET /api/v4/user
+
+Retrieves the authenticated user's information.
+GET /api/v4/user/organizations
+
+Lists all events/organizations the authenticated user has access to.
+GET /api/v4/user/cards
+
+Lists all Stripe cards associated with the authenticated user.
+GET /api/v4/user/card_grants
+
+Lists all card grants associated with the authenticated user.
+GET /api/v4/user/invitations
+
+Lists all organization invitations for the authenticated user.
+GET /api/v4/user/invitations/:id
+
+Retrieves a specific invitation by ID.
+POST /api/v4/user/invitations/:id/accept
+
+Accepts a specific invitation.
+POST /api/v4/user/invitations/:id/reject
+
+Rejects a specific invitation.
+GET /api/v4/user/transactions/missing_receipt
+
+Lists transactions that are missing receipts for the authenticated user.
+GET /api/v4/user/available_icons
+
+Retrieves available icons for the user.
+Organization Endpoints
+GET /api/v4/organizations/:id
+
+Retrieves information about a specific organization.
+GET /api/v4/organizations/:id/cards
+
+Lists all Stripe cards associated with the organization.
+GET /api/v4/organizations/:id/card_grants
+
+Lists all card grants associated with the organization.
+POST /api/v4/organizations/:id/card_grants
+
+Creates a new card grant for the organization.
+
+    Required parameters: TBD (not specified in routes)
+
+GET /api/v4/organizations/:id/transactions
+
+Lists all transactions for the organization.
+GET /api/v4/organizations/:id/transactions/:transaction_id
+
+Retrieves a specific transaction for the organization.
+PATCH/PUT /api/v4/organizations/:id/transactions/:transaction_id
+
+Updates a specific transaction.
+
+    Parameters: TBD (not specified in routes)
+
+GET /api/v4/organizations/:id/transactions/:transaction_id/receipts
+
+Lists all receipts for a specific transaction.
+POST /api/v4/organizations/:id/transactions/:transaction_id/receipts
+
+Uploads a receipt for a specific transaction.
+
+    Parameters: TBD (likely requires file upload)
+
+GET /api/v4/organizations/:id/transactions/:transaction_id/comments
+
+Lists all comments for a specific transaction.
+GET /api/v4/organizations/:id/transactions/:transaction_id/memo_suggestions
+
+Gets memo suggestions for a specific transaction.
+POST /api/v4/organizations/:id/transfers
+
+Creates a new disbursement/transfer for the organization.
+
+    Parameters: TBD (not specified in routes)
+
+POST /api/v4/organizations/:id/donations
+
+Creates a new donation for the organization.
+
+    Parameters: TBD (not specified in routes)
+
+Transaction Endpoints
+GET /api/v4/transactions/:id
+
+Retrieves a specific transaction by ID.
+Card Endpoints
+GET /api/v4/cards/:id
+
+Retrieves a specific Stripe card by ID.
+PATCH/PUT /api/v4/cards/:id
+
+Updates a specific Stripe card.
+
+    Parameters: TBD (not specified in routes)
+
+GET /api/v4/cards/:id/transactions
+
+Lists all transactions for a specific card.
+GET /api/v4/cards/:id/ephemeral_keys
+
+Retrieves ephemeral keys for a specific card (likely for mobile SDK integration).
+Card Grant Endpoints
+GET /api/v4/card_grants/:id
+
+Retrieves a specific card grant by ID.
+PATCH/PUT /api/v4/card_grants/:id
+
+Updates a specific card grant.
+
+    Parameters: TBD (not specified in routes)
+
+POST /api/v4/card_grants/:id/topup
+
+Adds funds to a specific card grant.
+
+    Parameters: TBD (not specified in routes)
+
+POST /api/v4/card_grants/:id/cancel
+
+Cancels a specific card grant.

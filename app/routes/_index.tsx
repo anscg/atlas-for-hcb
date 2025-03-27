@@ -1,15 +1,24 @@
-import { json, type MetaFunction, ActionFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { json, type MetaFunction, ActionFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
+import { useLoaderData, useFetcher, useSearchParams } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { getHcbConfig } from "~/env.server";
 import { Button } from "~/components/ui/loginwithhcb";
+import { getUserId } from "~/session.server";
 
-export const loader = async () => {
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await getUserId(request);
+  if (userId) {
+    return redirect("/dashboard");
+  }
+  
   const config = getHcbConfig();
+  const url = new URL(request.url);
+  const error = url.searchParams.get("error");
   
   return json({
     clientId: config.clientId,
     redirectUri: config.redirectUri,
+    error,
   });
 };
 
@@ -35,7 +44,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  const config = useLoaderData<typeof loader>();
+  const { clientId, redirectUri, error } = useLoaderData<typeof loader>();
+  const [searchParams] = useSearchParams();
   const fetcher = useFetcher();
   const [cooldown, setCooldown] = useState(false);
   
@@ -69,6 +79,13 @@ export default function Index() {
           <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
             Welcome to Atlas
           </h1>
+          {error && (
+            <div className="p-4 bg-red-100 text-red-700 rounded-md">
+              {error === "no_code" && "Authentication failed: No authorization code received."}
+              {error === "auth_failed" && "Authentication failed: Could not obtain access token."}
+              {error === "user_fetch_failed" && "Authentication failed: Could not fetch user data."}
+            </div>
+          )}
         </header>
         <div className="flex flex-col items-center gap-4">
           <Button

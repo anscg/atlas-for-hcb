@@ -1,5 +1,6 @@
 import { json, type MetaFunction, ActionFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useEffect, useState } from "react";
 import { getHcbConfig } from "~/env.server";
 import { Button } from "~/components/ui/loginwithhcb";
 
@@ -23,8 +24,6 @@ export async function action({ request }: ActionFunctionArgs) {
     scope: 'read write',
   });
 
-  await new Promise(r => setTimeout(r, 2000));
-
   return json({ authUrl: `${authorizationEndpoint}?${params.toString()}` });
 }
 
@@ -38,15 +37,29 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   const config = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
+  const [cooldown, setCooldown] = useState(false);
+  
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    if (fetcher.state === "idle" && fetcher.data && cooldown) {
+      timeoutId = setTimeout(() => {
+        setCooldown(false);
+      }, 3000); 
+    }
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [fetcher.state, fetcher.data, cooldown]);
   
   const handleLogin = () => {
     fetcher.submit({}, { method: "post" });
+    setCooldown(true);
   };
   
-  // Redirect when the auth URL is available
-  if (fetcher.data?.authUrl) {
-    console.log(fetcher.data.authUrl);
-    window.location.href = "https://google.com";
+  if (fetcher.state === "idle" && fetcher.data?.authUrl) {
+    window.location.href = fetcher.data.authUrl;
   }
 
   return (
@@ -60,9 +73,8 @@ export default function Index() {
         <div className="flex flex-col items-center gap-4">
           <Button
             onClick={handleLogin}
-            disabled={fetcher.state !== "idle"}
-          >
-            {fetcher.state !== "idle" ? "Loading..." : "Continue with HCB"}
+            disabled={fetcher.state !== "idle" || cooldown}
+            >
           </Button>
           <p className="text-xs text-left select-none text-stone-400 dark:text-stone-400">
             By clicking "Continue with HCB", you acknowledge that you have read, understood, and agree to Atlas' <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="underline hover:text-stone-500 dark:hover:text-stone-300">Terms & Conditions</a> and <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" className="underline hover:text-stone-500 dark:hover:text-stone-300">Privacy Policy</a>

@@ -1,0 +1,13 @@
+@keyframes spinner-fade {
+  0% {
+    background-color: currentColor;
+  }
+  
+  100% {
+    background-color: transparent;
+  }
+}
+
+.animate-spinner-fade {
+  animation: spinner-fade 1s infinite linear;
+}

@@ -53,7 +53,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         request,
         userId: user.id,
         tokenData: formattedTokenData,
-        redirectTo: "/dashboard",
+        redirectTo: "/mobilegate",
       });
     } catch (error) {
       console.error("Error fetching user data:", error);

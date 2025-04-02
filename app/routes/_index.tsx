@@ -128,6 +128,7 @@ export default function Index() {
   };
   
   if (fetcher.state === "idle" && fetcher.data?.authUrl) {
+    console.log("Hello")
     window.location.href = fetcher.data.authUrl;
   }
 

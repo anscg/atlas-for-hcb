@@ -1,6 +1,6 @@
 "use client";
 import { Sheet } from "@silk-hq/components";
-import "./page.css";
+import "./Page.css";
 import React from "react";
 import useA10StyleInjector from "../../hooks/useA10StyleInjector";
 

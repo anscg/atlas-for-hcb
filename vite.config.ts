@@ -9,6 +9,10 @@ declare module "@remix-run/node" {
 }
 
 export default defineConfig({
+  ssr: {
+    noExternal: ["@silk-hq/components"],
+  },
+
   plugins: [
     remix({
       future: {

@@ -17,11 +17,16 @@
     "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@radix-ui/react-slot": "^1.1.2",
     "@remix-run/node": "^2.16.0",
     "@remix-run/react": "^2.16.0",
     "@remix-run/serve": "^2.16.0",
+    "@silk-hq/components": "^0.8.15",
     "@supabase/supabase-js": "^2.49.4",
+    "boxicons": "^2.1.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "isbot": "^4.1.0",

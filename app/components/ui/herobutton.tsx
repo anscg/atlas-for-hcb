@@ -74,38 +74,37 @@ const HeroButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           else if (ref) ref.current = node;
         }}
         whileTap={{ scale: scaleValue }}
-        transition={{ 
-          type: "spring", 
-          stiffness: 1700, 
-          damping: 60,
-        }}
+        transition={{ type: "spring", bounce: 0.3, duration: 0.2 }}
         disabled={loading || props.disabled}
         {...props}
       >
-        <AnimatePresence mode="wait" initial={false}>
-          {loading ? (
-            <motion.div 
-              className="absolute inset-0 flex items-center justify-center"
-              key="spinner"
-              initial={{ opacity: 0, scale: 2, filter: "blur(5px)" }}
-              animate={{ opacity: 1, scale: 1.3, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.8, filter: "blur(4px)" }}
-              transition={{ duration: 0.1 }}
-            >
-              <Spinner size={spinnerSize} color={getSpinnerColor()} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="content"
-              initial={{ opacity: 0, scale: 0.8, filter: "blur(4px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.8, filter: "blur(4px)" }}
-              transition={{ duration: 0.1 }}
-            >
-              {children}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="relative overflow-hidden w-full flex items-center justify-center" style={{ minHeight: "1.5rem" }}>
+          <AnimatePresence mode="sync" initial={false}>
+            {loading ? (
+              <motion.div 
+                className="absolute inset-0 flex items-center justify-center"
+                key="spinner"
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ type: "spring", bounce: 0.5, duration: 0.8 }}
+              >
+                <Spinner size={spinnerSize} color={getSpinnerColor()} />
+              </motion.div>
+            ) : (
+              <motion.div
+                className="flex items-center justify-center w-full"
+                key="content"
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ type: "spring", bounce: 0.5, duration: 0.8 }}
+              >
+                {children}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </Comp>
     )
   }

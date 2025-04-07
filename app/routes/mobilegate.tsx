@@ -50,7 +50,10 @@ export default function MobileGate() {
 
   const handleContinue = () => {
     setIsNavigating(true);
-    navigate("/dashboard");
+    // Simulate a delay for loading state
+    setTimeout(() => {
+      navigate("/dashboard");
+    }, 1000);
   };
 
   const isLoading = isNavigating || navigation.state !== "idle";
@@ -96,7 +99,7 @@ export default function MobileGate() {
             className="w-full rounded-full h-[3.3rem] bg-stone-800 py-6 text-white font-medium text-lg"
             onClick={handleContinue}
             loading={isLoading}
-            spinnerSize={16}
+            spinnerSize={20}
           >
             Continue
           </HeroButton>

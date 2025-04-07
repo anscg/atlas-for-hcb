@@ -34,6 +34,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        
+
+        <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
         {children}
         <ScrollRestoration />
         <Scripts />

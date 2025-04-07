@@ -22,12 +22,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect("/?error=unauthorized");
   }
   
-  // Create an external login session for QR code
   const sessionId = createExternalLoginSession(userId);
   
-  // Get the base URL for the application
   const baseUrl = new URL(request.url).origin;
-  const loginUrl = `${baseUrl}/instalogin?sessionId=${sessionId}`;
+  const loginUrl = `https://prod.atlas.pikachu.anscg.net/instalogin?sessionId=${sessionId}`;
   
   return json({ loginUrl });
 };
@@ -111,14 +109,14 @@ export default function MobileGate() {
             </p>
           </div>
 
-          <div className="mx-auto aspect-square w-64 border-[1.5px] border-neutral-200 p-4 rounded-[17px] relative">
+          <div className="mx-auto aspect-square w-64 border-[1.5px] border-neutral-200 rounded-[17px] p-2 relative">
             {qrCodeUrl ? (
               <>
                 <div className="relative h-full w-full rounded-md bg-white overflow-hidden">
                   <img 
                     src={qrCodeUrl} 
                     alt="QR Code for mobile login" 
-                    className={`h-full w-full transition-all duration-300 ${isQrVisible ? 'filter-none' : 'blur-lg'}`} 
+                    className={`h-full w-full transition-all rounded-[17px] duration-300 ${isQrVisible ? 'filter-none' : 'blur-lg'}`} 
                   />
                   
                   <button 

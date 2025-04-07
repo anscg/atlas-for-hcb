@@ -15,3 +15,6 @@
     box-shadow: var(--shadow-4);
  }
  
+ .clippery {
+   clip-path: border-box;
+ }

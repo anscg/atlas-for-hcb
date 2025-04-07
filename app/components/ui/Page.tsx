@@ -1,6 +1,6 @@
 "use client";
 import { Sheet } from "@silk-hq/components";
-import "./Page.css";
+import "./page.css";
 import React from "react";
 import useA10StyleInjector from "../../hooks/useA10StyleInjector";
 
@@ -10,24 +10,27 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Page = ({ presentTrigger, sheetContent, ...restProps }: Props) => {
-   //useA10StyleInjector();
+   useA10StyleInjector();
    
    return (
       <Sheet.Root license="commercial" {...restProps}>
          {presentTrigger}
          <Sheet.Portal>
-            <div className="flex flex-col items-center justify-center h-screen">
                <Sheet.View
-                  className="Page-view sm:max-w-md w-screen"
+                  className="Page-view"
                   contentPlacement="right"
-                  swipeOvershoot={true}
+                  swipeOvershoot={false}
                   nativeEdgeSwipePrevention={true}
                >
-                  <Sheet.Backdrop className="Page-backdrop" />
-                  <Sheet.Content className="Page-content">{sheetContent}</Sheet.Content>
+                  
+                  <div className="flex flex-col justify-center items-center h-screen w-screen">
+                     <div className="sm:max-w-md w-screen h-screen clippery">
+                     <Sheet.Content className="Page-content sm:max-w-md w-screen">{sheetContent}</Sheet.Content>
+                     <Sheet.Backdrop className="Page-backdrop" />
+                     </div>
+                  </div>
+                  
                </Sheet.View>
-            </div>
-            
          </Sheet.Portal>
       </Sheet.Root>
    );

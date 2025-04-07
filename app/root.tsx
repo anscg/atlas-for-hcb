@@ -10,6 +10,7 @@ import type { LinksFunction } from "@remix-run/node";
 import "./tailwind.css";
 import "./styles/fonts.css";
 import "~/styles/animations.css";
+import "~/styles/some.css";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -37,7 +38,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         
 
         <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
-        {children}
+        <div>
+          <div>
+          {children}
+          </div>
+        </div>
+        
         <ScrollRestoration />
         <Scripts />
       </body>

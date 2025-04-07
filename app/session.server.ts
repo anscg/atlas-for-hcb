@@ -122,6 +122,53 @@ export async function getTokenData(
   };
 }
 
+// Store active login sessions temporarily (in production, use a database)
+const pendingLoginSessions = new Map<string, { userId: number; createdAt: number }>();
+
+/**
+ * Creates a session for external login (QR code scanning)
+ * Returns a session ID that can be used to authenticate the user
+ */
+export function createExternalLoginSession(userId: number): string {
+  // Generate a random session ID
+  const sessionId = Math.random().toString(36).substring(2, 15) + 
+                    Math.random().toString(36).substring(2, 15);
+  
+  // Store the session with a 10-minute expiration
+  pendingLoginSessions.set(sessionId, {
+    userId,
+    createdAt: Date.now()
+  });
+  
+  // Clean up expired sessions periodically
+  setTimeout(() => {
+    pendingLoginSessions.delete(sessionId);
+  }, 10 * 60 * 1000); // 10 minutes
+  
+  return sessionId;
+}
+
+/**
+ * Validates and consumes an external login session
+ * Returns the user ID if valid, null otherwise
+ */
+export function validateExternalLoginSession(sessionId: string): number | null {
+  const session = pendingLoginSessions.get(sessionId);
+  
+  // No session found
+  if (!session) return null;
+  
+  // Check if session is expired (10 minutes)
+  if (Date.now() - session.createdAt > 10 * 60 * 1000) {
+    pendingLoginSessions.delete(sessionId);
+    return null;
+  }
+  
+  // Valid session - consume it (one-time use)
+  pendingLoginSessions.delete(sessionId);
+  return session.userId;
+}
+
 // logout remains the same
 export async function logout(request: Request) {
   const session = await getSession(request);

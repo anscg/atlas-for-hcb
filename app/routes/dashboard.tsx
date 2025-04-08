@@ -107,15 +107,6 @@ export default function Dashboard() {
                 backgroundColor="#FF4747"
               />
             </div>
-
-            <Form action="/logout" method="post">
-              <button 
-                type="submit"
-                className="rounded-md bg-red-600 opacity-10 px-3 py-2 text-sm font-semibold text-white hover:bg-red-500"
-              >
-                Logout
-              </button>
-            </Form>
           </div>
         </div>
       </div>

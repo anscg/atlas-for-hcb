@@ -30,7 +30,7 @@ export default function Dashboard() {
   const { userId, hcbUserId, organizations } = useLoaderData<typeof loader>();
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-white relative">
+    <div className="flex flex-col items-center justify-center h-screen bg-white relative pointer-effect-none">
       <div className="absolute inset-0 top-[-60px] z-10 pointer-events-none">
         <img 
           src="/dashmock.png"
@@ -57,7 +57,7 @@ export default function Dashboard() {
 
             <div className="overflow-hidden text-center">
               <h1
-                className="truncate text-[1.4rem] font-semibold leading-tight text-gray-900"
+                className="truncate text-[1.4rem] font-semibold leading-tight select-none text-gray-900"
                 title="Atlas Title"
               >
                 Atlas
@@ -75,7 +75,7 @@ export default function Dashboard() {
 
             <div className="mb-[0.85rem]">
               <div className="flex justify-between items-center w-full mb-3">
-              <h2 className="text-lg font-semibold opacity-80 tracking-[-0.005em]">Your organizations</h2>
+              <h2 className="text-lg font-semibold opacity-80 select-none tracking-[-0.005em]">Your organizations</h2>
               <AnimatedBaseButton 
                 type="button" 
                 className="rounded-full p-1 text-[#93979F] transition-colors duration-200 flex items-center justify-center"

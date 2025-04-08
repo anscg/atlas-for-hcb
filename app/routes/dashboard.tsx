@@ -31,13 +31,13 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-white relative pointer-effect-none">
-      <div className="absolute inset-0 top-[-60px] z-10 pointer-events-none">
+      {/*<div className="absolute inset-0 top-[-60px] z-10 pointer-events-none">
         <img 
           src="/dashmock.png"
           alt="Dashboard mockup" 
           className="w-full h-auto opacity-0"
         />
-      </div>
+      </div>*/}
       
       <div className="sm:max-w-md w-screen h-screen relative z-0">
         <header
@@ -70,7 +70,7 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <div className="px-[21px] py-2">
+        <div className="px-[24px] py-2">
           <div className="">
 
             <div className="mb-[0.85rem]">

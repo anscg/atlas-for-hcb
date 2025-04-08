@@ -10,6 +10,23 @@ interface OrgCardProps {
 }
 
 function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: OrgCardProps) {
+  const cardRef = React.useRef<HTMLDivElement>(null);
+  
+  React.useEffect(() => {
+    if (cardRef.current) {
+      const updateCardHeight = () => {
+        const height = cardRef.current?.clientHeight || 112;
+        document.documentElement.style.setProperty('--card-height', `${height}`);
+      };
+      
+      updateCardHeight();
+      window.addEventListener('resize', updateCardHeight);
+      
+      return () => {
+        window.removeEventListener('resize', updateCardHeight);
+      };
+    }
+  }, []);
 
   const formatAmount = (value: string | number): string => {
     if (typeof value === 'number') {
@@ -20,20 +37,23 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
 
   return (
     <div 
+      ref={cardRef}
       style={{
         boxShadow: `0 10px 30px -6px ${backgroundColor}40`,
         borderRadius: '22px',
         width: '100%',
-        height: '7.8rem'
+        aspectRatio: '165/112', // Set aspect ratio of width:height as 165:112
       }}
+      className="relative"
     >
       <Squircle
         cornerRadius={22}
         cornerSmoothing={0.7}
         style={{
           backgroundColor: backgroundColor,
+          fontSize: '1px', // Base font size for calculations
         }}
-        className="p-[0.8rem] w-full space-y-2 h-full pointer-events-none select-none"
+        className="p-[0.8rem] w-full h-full pointer-events-none select-none flex flex-col"
       >
         <div className="mb-[0.87rem] flex h-[2.8rem] w-[2.8rem] opacity-90 bg-white items-center justify-center rounded-full">
           <img
@@ -43,9 +63,15 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
           />
         </div>
 
-        <div className="space-y-reverse space-y-8">
-          <p className="text-[1.04rem] font-regular text-white select-none">{orgName}</p>
-          <p className="text-[0.832rem] opacity-50 font-light text-amount-text text-white select-none">{formatAmount(amount)}</p>
+        <div className="mt-auto space-y-1">
+          <p className="text-white select-none font-medium" 
+             style={{ fontSize: 'calc(15 * (100% * var(--card-height, 112) / 112))', lineHeight: '1.2' }}>
+            {orgName}
+          </p>
+          <p className="opacity-50 font-light text-white select-none" 
+             style={{ fontSize: 'calc(12 * (100% * var(--card-height, 112) / 112))', lineHeight: '1.2' }}>
+            {formatAmount(amount)}
+          </p>
         </div>
       </Squircle>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { Squircle } from 'corner-smoothing';
+import { motion } from 'framer-motion';
 
 interface OrgCardProps {
   imageSrc: string;
@@ -39,8 +40,12 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
   };
 
   return (
-    <div 
+    <motion.div 
       ref={cardRef}
+      whileTap={{ 
+        scale: 0.95, 
+        transition: { type: "spring", bounce: 0, duration: 0.1 } 
+      }}
       style={{
         boxShadow: `0 10px 30px -6px ${backgroundColor}40`,
         borderRadius: `calc(20 * var(--card-height, 112) / 112 * 1px)`,
@@ -51,13 +56,13 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
     >
       <Squircle
         cornerRadius={cornerRadius}
-        cornerSmoothing={0.7}
+        cornerSmoothing={0.77}
         style={{
           backgroundColor: backgroundColor,
           fontSize: '1px', // Base font size for calculations
           padding: 'calc(12 * var(--card-height, 112) / 112 * 1px)',
         }}
-        className="w-full h-full pointer-events-none select-none flex flex-col"
+        className="w-full h-full select-none flex flex-col"
       >
         <div 
           className="flex items-center justify-center rounded-full bg-white opacity-90"
@@ -89,7 +94,7 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
           </p>
         </div>
       </Squircle>
-    </div>
+    </motion.div>
   );
 }
 

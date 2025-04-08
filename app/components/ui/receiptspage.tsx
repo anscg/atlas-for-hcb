@@ -13,7 +13,7 @@ const ReceiptsPage = () => {
           <AnimatedBaseButton
           type="button"
           className=" rounded-full p-1 text-[#93979F] transition-colors duration-200 leading-0 flex items-center justify-center"
-          aria-label="Open settings"
+          aria-label="Open Receipts"
         >
           <box-icon name="receipt" color="#93979F" className="w-7 h-7" />
         </AnimatedBaseButton>
@@ -22,6 +22,8 @@ const ReceiptsPage = () => {
       }
       sheetContent={
         <>
+          
+          
           <Scroll.Root asChild>
             <Scroll.View className="ExamplePage-scrollView">
               <Scroll.Content asChild>
@@ -154,13 +156,6 @@ const ReceiptsPage = () => {
               </Scroll.Content>
             </Scroll.View>
           </Scroll.Root>
-          <Sheet.Trigger
-            className="ExamplePage-dismissTrigger"
-            action="dismiss"
-            asChild
-          >
-            <SheetDismissButton />
-          </Sheet.Trigger>
         </>
       }
     />

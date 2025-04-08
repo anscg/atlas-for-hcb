@@ -70,7 +70,7 @@ export default function Dashboard() {
           </div>
         </header>
 
-        <div className="px-[27px] py-2">
+        <div className="px-[21px] py-2">
           <div className="">
 
             <div className="mb-[0.85rem]">

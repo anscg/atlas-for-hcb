@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Page } from "./Page";
 import { Scroll, Sheet } from "@silk-hq/components";
 import "./receiptspage.css";
-import { AnimatedBaseButton } from "./Button/AnimatedBaseButton";
+import { AnimatedBaseButton } from "./animatedbasebutton";
 import { SheetDismissButton } from "./Button/SheetDismissButton";
 
 const ReceiptsPage = () => {

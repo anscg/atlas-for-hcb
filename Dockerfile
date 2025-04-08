@@ -2,11 +2,11 @@ FROM node:18 as build
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json package-lock.json* ./
+# Copy package file
+COPY package.json ./
 
-# Install dependencies using npm
-RUN npm ci
+# Install dependencies using npm without requiring package-lock.json
+RUN npm install
 
 # Copy the rest of the application
 COPY . .

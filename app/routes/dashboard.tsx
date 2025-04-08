@@ -102,8 +102,8 @@ export default function Dashboard() {
               />
               <OrgCard
                 imageSrc="juice.png"
-                orgName="Juice"
-                amount={6212.40}
+                orgName="Counterspell Hong Kong"
+                amount={1423.1}
                 backgroundColor="#FF4747"
               />
             </div>

@@ -39,6 +39,13 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
     return value;
   };
 
+  const truncateOrgName = (name: string, maxLength: number = 17): string => {
+    if (name.length <= maxLength) {
+      return name;
+    }
+    return `${name.substring(0, maxLength - 3)}...`;
+  };
+
   return (
     <motion.div 
       ref={cardRef}
@@ -86,7 +93,7 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
         <div className="mt-auto space-y-1">
           <p className="text-white select-none font-medium" 
              style={{ fontSize: 'calc(15 * (100% * var(--card-height, 112) / 112))', lineHeight: '1.2' }}>
-            {orgName}
+            {truncateOrgName(orgName)}
           </p>
           <p className="opacity-50 font-light text-white select-none" 
              style={{ fontSize: 'calc(12 * (100% * var(--card-height, 112) / 112))', lineHeight: '1.2' }}>

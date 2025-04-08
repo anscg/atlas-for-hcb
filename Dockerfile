@@ -1,20 +1,20 @@
-FROM oven/bun:1 as build
+FROM node:18 as build
 
 WORKDIR /app
 
 # Copy package files
-COPY package.json bun.lockb ./
+COPY package.json package-lock.json* ./
 
-# Install dependencies using Bun
-RUN bun install --frozen-lockfile
+# Install dependencies using npm
+RUN npm ci
 
 # Copy the rest of the application
 COPY . .
 
 # Build the application
-RUN bun run build
+RUN npm run build
 
-FROM oven/bun:1-slim as production
+FROM node:18-slim as production
 
 WORKDIR /app
 
@@ -29,4 +29,4 @@ COPY --from=build /app/package.json ./package.json
 EXPOSE 3000
 
 # Start the app
-CMD ["bun", "run", "start"]
+CMD ["npm", "run", "start"]

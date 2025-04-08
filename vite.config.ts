@@ -10,7 +10,7 @@ declare module "@remix-run/node" {
 
 export default defineConfig({
   ssr: {
-    noExternal: ["@silk-hq/components"],
+    noExternal: ["@silk-hq/components", "corner-smoothing","figma-squircle"],
   },
 
   plugins: [

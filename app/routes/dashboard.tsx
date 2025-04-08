@@ -4,6 +4,7 @@ import { requireUserId, getUser } from "~/session.server";
 import { getUserOrganizations, OrganizationSummary } from "~/hcb.server";
 import AnimatedBaseButton from "~/components/ui/animatedbasebutton";
 import { ReceiptsPage } from "~/components/ui/receiptspage";
+import OrgCard from "~/components/ui/Dashboard/orgcard";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await requireUserId(request);
@@ -56,8 +57,8 @@ export default function Dashboard() {
 
             <div className="overflow-hidden text-center">
               <h1
-                className="truncate text-xl font-semibold leading-tight text-gray-900"
-                title="App Title / Page Name"
+                className="truncate text-[1.4rem] font-semibold leading-tight text-gray-900"
+                title="Atlas Title"
               >
                 Atlas
               </h1>
@@ -70,11 +71,11 @@ export default function Dashboard() {
         </header>
 
         <div className="px-[27px] py-2">
-          <div>
+          <div className="">
 
-            <div className="mb-6">
+            <div className="mb-[0.85rem]">
               <div className="flex justify-between items-center w-full mb-3">
-              <h2 className="text-lg font-semibold opacity-80 tracking-tight">Your Organizations</h2>
+              <h2 className="text-lg font-semibold opacity-80 tracking-[-0.005em]">Your organizations</h2>
               <AnimatedBaseButton 
                 type="button" 
                 className="rounded-full p-1 text-[#93979F] transition-colors duration-200 flex items-center justify-center"
@@ -86,10 +87,31 @@ export default function Dashboard() {
               </div>
             </div>
 
+            <div className="grid grid-cols-2 gap-4">
+              <OrgCard
+                imageSrc="juice.png"
+                orgName="Juice"
+                amount={6212.40}
+                backgroundColor="#FF4747"
+              />
+              <OrgCard
+                imageSrc="APO.png"
+                orgName="Apocalypse"
+                amount={10622.40}
+                backgroundColor="#6266FA"
+              />
+              <OrgCard
+                imageSrc="juice.png"
+                orgName="Juice"
+                amount={6212.40}
+                backgroundColor="#FF4747"
+              />
+            </div>
+
             <Form action="/logout" method="post">
               <button 
                 type="submit"
-                className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-500"
+                className="rounded-md bg-red-600 opacity-10 px-3 py-2 text-sm font-semibold text-white hover:bg-red-500"
               >
                 Logout
               </button>

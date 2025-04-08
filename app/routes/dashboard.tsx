@@ -87,7 +87,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3 gap-y-4">
               <OrgCard
                 imageSrc="juice.png"
                 orgName="Juice"

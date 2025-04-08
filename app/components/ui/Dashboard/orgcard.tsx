@@ -11,12 +11,15 @@ interface OrgCardProps {
 
 function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: OrgCardProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
+  const [cornerRadius, setCornerRadius] = React.useState(20);
   
   React.useEffect(() => {
     if (cardRef.current) {
       const updateCardHeight = () => {
         const height = cardRef.current?.clientHeight || 112;
         document.documentElement.style.setProperty('--card-height', `${height}`);
+        // Calculate corner radius based on height
+        setCornerRadius(Math.max(5, 20 * (height / 112)));
       };
       
       updateCardHeight();
@@ -40,26 +43,38 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
       ref={cardRef}
       style={{
         boxShadow: `0 10px 30px -6px ${backgroundColor}40`,
-        borderRadius: '22px',
+        borderRadius: `calc(20 * var(--card-height, 112) / 112 * 1px)`,
         width: '100%',
         aspectRatio: '165/112', // Set aspect ratio of width:height as 165:112
       }}
       className="relative"
     >
       <Squircle
-        cornerRadius={22}
+        cornerRadius={cornerRadius}
         cornerSmoothing={0.7}
         style={{
           backgroundColor: backgroundColor,
           fontSize: '1px', // Base font size for calculations
+          padding: 'calc(12 * var(--card-height, 112) / 112 * 1px)',
         }}
-        className="p-[0.8rem] w-full h-full pointer-events-none select-none flex flex-col"
+        className="w-full h-full pointer-events-none select-none flex flex-col"
       >
-        <div className="mb-[0.87rem] flex h-[2.8rem] w-[2.8rem] opacity-90 bg-white items-center justify-center rounded-full">
+        <div 
+          className="flex items-center justify-center rounded-full bg-white opacity-90"
+          style={{ 
+            height: 'calc(40 * var(--card-height, 112) / 112 * 1px)', 
+            width: 'calc(40 * var(--card-height, 112) / 112 * 1px)',
+            marginBottom: 'calc(10 * var(--card-height, 112) / 112 * 1px)'
+          }}
+        >
           <img
             src={imageSrc}
             alt="Organization Icon"
-            className="h-fill w-fill rounded-full object-contain select-none"
+            className="rounded-full object-contain select-none"
+            style={{ 
+              height: 'calc(40 * var(--card-height, 112) / 112 * 1px)', 
+              width: 'calc(40 * var(--card-height, 112) / 112 * 1px)'
+            }}
           />
         </div>
 

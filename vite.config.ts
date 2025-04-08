@@ -8,16 +8,12 @@ declare module "@remix-run/node" {
   }
 }
 
-// Pass a function to defineConfig
-export default defineConfig(({ command }) => {
-  // 'command' will be 'build' or 'serve'
-  const isProduction = command === "build";
-
-  // Return your configuration object from the function
+export default defineConfig((config) => {
   return {
     ssr: {
       noExternal: ["@silk-hq/components"],
     },
+
     plugins: [
       remix({
         future: {
@@ -30,13 +26,14 @@ export default defineConfig(({ command }) => {
       }),
       tsconfigPaths(),
     ],
-    resolve: isProduction // Use the 'isProduction' boolean derived from 'command'
-      ? {
-          alias: {
-            // Force 'react-dom/server' to resolve to the Node.js version
-            "react-dom/server": "react-dom/server.node.js",
-          },
-        }
-      : {}, // No alias needed for development server
+    resolve:
+      config.command === "build" // Apply only when building for production
+        ? {
+            alias: {
+              // Force 'react-dom/server' to resolve to the Node.js version
+              "react-dom/server": "react-dom/server.node.js",
+            },
+          }
+        : {}, // No alias needed for development server
   };
 });

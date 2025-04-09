@@ -13,6 +13,7 @@ interface OrgCardProps {
 function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: OrgCardProps) {
   const cardRef = React.useRef<HTMLDivElement>(null);
   const [cornerRadius, setCornerRadius] = React.useState(20);
+  const [isAmountLoaded, setIsAmountLoaded] = React.useState(false);
   
   React.useEffect(() => {
     if (cardRef.current) {
@@ -31,6 +32,16 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
       };
     }
   }, []);
+  
+  React.useEffect(() => {
+    if (amount !== undefined && amount !== null) {
+      const timer = setTimeout(() => {
+        setIsAmountLoaded(true);
+      }, 300); // Short delay before showing the amount
+      
+      return () => clearTimeout(timer);
+    }
+  }, [amount]);
 
   const formatAmount = (value: string | number): string => {
     if (typeof value === 'number') {
@@ -95,10 +106,28 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
              style={{ fontSize: 'calc(15 * (100% * var(--card-height, 112) / 112))', lineHeight: '1.2' }}>
             {truncateOrgName(orgName)}
           </p>
-          <p className="opacity-50 font-light text-white select-none" 
-             style={{ fontSize: 'calc(12 * (100% * var(--card-height, 112) / 112))', lineHeight: '1.2' }}>
-            {formatAmount(amount)}
-          </p>
+          <div style={{ height: 'calc(14.5 * var(--card-height, 112) / 112 * 1px)' }}>
+            {amount !== undefined && amount !== null ? (
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isAmountLoaded ? 0.5 : 0 }}
+                transition={{ duration: 0.2 }}
+                className="font-light text-white select-none" 
+                style={{ fontSize: 'calc(12 * (100% * var(--card-height, 112) / 112))', lineHeight: '1.2' }}
+              >
+                {formatAmount(amount)}
+              </motion.p>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="w-16 bg-white bg-opacity-20 animate-pulse rounded"
+                style={{ height: 'calc(14.5 * var(--card-height, 112) / 112 * 1px)' }}
+              >
+              </motion.div>
+            )}
+          </div>
         </div>
       </Squircle>
     </motion.div>

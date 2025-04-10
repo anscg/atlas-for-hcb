@@ -74,7 +74,7 @@ const HeroButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           else if (ref) ref.current = node;
         }}
         whileTap={{ scale: scaleValue }}
-        transition={{ type: "spring", bounce: 0.3, duration: 0.2 }}
+        transition={{ type: "spring", duration: 0.15, bounce: 0 }}
         disabled={loading || props.disabled}
         {...props}
       >

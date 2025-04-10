@@ -20,8 +20,12 @@
 .DetachedSheet-innerContent {
    /* SELF-LAYOUT */
    height: 100%;
+   
+   /* CLIPPING */
+   overflow: hidden;
 
    /* APPEARANCE */
    border-radius: var(--radius-8);
+   mask-clip: content-box;
    background-color: white;
 }

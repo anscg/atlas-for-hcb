@@ -4,6 +4,9 @@ import { DetachedSheet } from "../DetachedSheet/DetachedSheet";
 import "./ReciptsHelp.css";
 import AnimatedBaseButton from "../../animatedbasebutton";
 import { SheetDismissButton } from "../../Button/SheetDismissButton";
+import Rive from "@rive-app/react-canvas";
+import { HeroButton } from "../../herobutton";
+
 
 const ReciptsHelp = () => {
   return (
@@ -20,28 +23,51 @@ const ReciptsHelp = () => {
         </Sheet.Trigger>
       }
       sheetContent={
-        <div className={"ExampleDetachedSheet-root relative"}>
-          {/* Add SheetDismissButton in the upper-right corner */}
+        <div className={"relative"}>
           <div className="absolute top-6 right-6 z-10">
+          <Sheet.Trigger asChild action="dismiss">
             <SheetDismissButton />
-          </div>
-          
-          <div className="ExampleDetachedSheet-illustration" />
-          <div className="ExampleDetachedSheet-information">
-            <Sheet.Title className="ExampleDetachedSheet-title">
-              Your Meal is Coming
-            </Sheet.Title>
-            <Sheet.Description className="ExampleDetachedSheet-description">
-              Your food is on its way and will arrive soon! Sit back and get
-              ready to enjoy your meal.
-            </Sheet.Description>
-          </div>
-          <Sheet.Trigger
-            className="ExampleDetachedSheet-validateTrigger"
-            action="dismiss"
-          >
-            Got it
           </Sheet.Trigger>
+          </div>
+          <div className="flex items-center justify-center pointer-events-none relative">
+            <Rive 
+              src="animations/receipts.riv" 
+              stateMachines="State Machine 1" 
+              style={{ 
+                width: '100%', 
+                aspectRatio: '438/235',
+                //maxWidth: '101%',
+                //display: 'block',
+                //margin: 'auto'
+              }} 
+            />
+            <div className="absolute bottom-6 left-8 leading-snug text-white">
+              <p className="font-semibold text-[27px]">About Receipts</p>
+              <p className="opacity-80 font-regular text-[17px]">Learn more about receipts</p>
+            </div>
+          </div>
+          <div className="p-[2rem] flex justify-center gap-7 flex-col">
+            <div className="font-medium text-[#999] space-y-5 text-lg">
+              <p>
+                Since HCB have a requirement with the IRS to show all our receipts 
+                and your organization is underneath ours through fiscal sponsorship, 
+                we ask you to upload all your receipts for funds that leave your 
+                HCB account.
+              </p>
+              <p>
+              Please try to upload these receipts as soon as possible. 
+              This receipt could be a screenshot, download email, 
+              or a picture of a physical receipts. 
+              </p>
+              <a href="http://help.hcb.hackclub.com/article/28-how-do-i-upload-receipts" className="opacity-100 text-[#33B9F2]" >Learn more.</a>
+            </div>
+          <Sheet.Trigger asChild action="dismiss">
+          <HeroButton variant="default"
+            className="w-full shadow-none rounded-full h-[3.1rem] bg-[#F4B000] hover:bg-[#F4B000] py-6 text-white font-medium text-lg">
+            Got It
+          </HeroButton>
+          </Sheet.Trigger>
+          </div>
         </div>
       }
     />

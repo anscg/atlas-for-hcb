@@ -14,8 +14,18 @@ const useA10StyleInjector = () => {
               attr.value && 
               attr.value.startsWith('a10')) {
             
-            // Add our classes
-            element.classList.add('flex', 'flex-col', 'items-center', 'justify-center');
+            const hasPageContentChild = Array.from(element.querySelectorAll('*')).some(
+              child => {
+                if (child.className && typeof child.className === 'string') {
+                  return child.className.includes('Page-content');
+                }
+                return false;
+              }
+            );
+            
+            if (hasPageContentChild) {
+              element.classList.add('flex', 'flex-col', 'items-center', 'justify-center');
+            }
             break;
           }
         }

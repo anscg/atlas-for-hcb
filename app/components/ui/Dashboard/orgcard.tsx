@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Squircle } from 'corner-smoothing';
 import { motion } from 'framer-motion';
 
@@ -57,6 +57,18 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
     return `${name.substring(0, maxLength - 3)}...`;
   };
 
+  // Add pointer move handler for glow effect
+  const pointerMoveHandler = useCallback((event: React.PointerEvent) => {
+    if (!cardRef.current || event.pointerType !== "mouse") return;
+
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    cardRef.current.style.setProperty("--xPos", `${x}px`);
+    cardRef.current.style.setProperty("--yPos", `${y}px`);
+  }, []);
+
   return (
     <motion.div 
       ref={cardRef}
@@ -64,13 +76,17 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
         scale: 0.95, 
         transition: { type: "spring", bounce: 0, duration: 0.1 } 
       }}
+      onPointerMove={pointerMoveHandler}
       style={{
         boxShadow: `0 10px 30px -6px ${backgroundColor}40`,
         borderRadius: `calc(20 * var(--card-height, 112) / 112 * 1px)`,
         width: '100%',
         aspectRatio: '165/112', // Set aspect ratio of width:height as 165:112
-      }}
-      className="relative"
+        position: 'relative', // Ensure positioned for the glow effect
+        '--xPos': '50%',
+        '--yPos': '50%',
+      } as React.CSSProperties}
+      className="relative group"
     >
       <Squircle
         cornerRadius={cornerRadius}
@@ -130,6 +146,15 @@ function OrgCard({ imageSrc, orgName, amount, backgroundColor = '#F96262' }: Org
           </div>
         </div>
       </Squircle>
+      
+      {/* Add the glow effect div */}
+      <div 
+        className="absolute inset-0 rounded-[inherit] opacity-0 group-hover:opacity-30 transition-opacity duration-200 pointer-events-none"
+        style={{
+          background: `radial-gradient(1000px circle at var(--xPos) var(--yPos), rgba(255, 255, 255, 0.33), transparent 35%)`,
+          borderRadius: `calc(20 * var(--card-height, 112) / 112 * 1px)`,
+        }}
+      />
     </motion.div>
   );
 }

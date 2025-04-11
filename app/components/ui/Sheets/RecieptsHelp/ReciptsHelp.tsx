@@ -41,13 +41,13 @@ const ReciptsHelp = () => {
                 //margin: 'auto'
               }} 
             />
-            <div className="absolute bottom-6 left-8 leading-snug text-white">
+            <div className="absolute bottom-6 left-8 leading-snug z-10 text-white">
               <p className="font-semibold text-[27px] select-none">About Receipts</p>
-              <p className="opacity-80 font-regular text-[17px] select-none">Learn more about receipts</p>
+              <p className="opacity-80 font-regular text-[17px] select-none">Learn more about receipts.</p>
             </div>
           </div>
-          <div className="p-[2rem] flex justify-center gap-7 flex-col">
-            <div className="font-medium text-[#999] space-y-5 text-lg">
+          <div className="p-[1.2rem] flex justify-center gap-7 flex-col">
+            <div className="font-medium px-3 pt-3 text-[#999] space-y-5 leading-snug text-[1.04rem]">
               <p className="select-none">
                 Since HCB have a requirement with the IRS to show all our receipts 
                 and your organization is underneath ours through fiscal sponsorship, 

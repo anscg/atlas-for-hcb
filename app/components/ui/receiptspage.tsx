@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Page } from "./Page";
 import { Scroll, Sheet } from "@silk-hq/components";
 import "./receiptspage.css";

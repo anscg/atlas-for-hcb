@@ -1,27 +1,18 @@
-
-import pkg from 'pg';
-const {Pool} = pkg;
-import { getEnvVar } from './env.server';
+import { PrismaClient } from '@prisma/client';
 import { TokenData } from "./session.server";
 
-let pool;
+// PrismaClient is attached to the `global` object in development to prevent
+// exhausting your database connection limit.
+let prisma: PrismaClient;
 
-function getPool() {
-  if (!pool) {
-    pool = new Pool({
-      connectionString: getEnvVar('DATABASE_URL'),
-    });
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient();
+} else {
+  if (!global.__db__) {
+    global.__db__ = new PrismaClient();
   }
-  return pool;
-}
-
-export async function query(text: string, params: any[] = []) {
-  const client = await getPool().connect();
-  try {
-    return await client.query(text, params);
-  } finally {
-    client.release();
-  }
+  prisma = global.__db__;
+  prisma.$connect();
 }
 
 export interface User {
@@ -31,42 +22,50 @@ export interface User {
   email: string | null;
   access_token: string | null;
   refresh_token: string | null;
-  token_expires_at: Date | null; // pg driver returns Date object for TIMESTAMPTZ
-  // Add other user fields if you have them
+  token_expires_at: Date | null;
 }
 
 export async function findOrCreateUser(
   hcbUserId: string,
   name?: string,
   email?: string,
-  tokenData?: TokenData, // Add tokenData as optional param
+  tokenData?: TokenData,
 ): Promise<User> {
-  // Convert expires_at (milliseconds) to a Date object for TIMESTAMPTZ
+  // Convert expires_at (milliseconds) to a Date object
   const expiresAtDate = tokenData?.expires_at
     ? new Date(tokenData.expires_at)
     : null;
 
-  const result = await query(
-    `INSERT INTO users (user_id, name, email, access_token, refresh_token, token_expires_at)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     ON CONFLICT (user_id) DO UPDATE SET
-       name = COALESCE($2, users.name),
-       email = COALESCE($3, users.email),
-       -- Always update tokens if provided, otherwise keep existing
-       access_token = COALESCE($4, users.access_token),
-       refresh_token = COALESCE($5, users.refresh_token),
-       token_expires_at = COALESCE($6, users.token_expires_at)
-     RETURNING id, user_id, name, email, access_token, refresh_token, token_expires_at`,
-    [
-      hcbUserId,
-      name,
-      email,
-      tokenData?.access_token,
-      tokenData?.refresh_token,
-      expiresAtDate, // Pass the Date object or null
-    ],
-  );
-  return result.rows[0];
+  // Check if user exists
+  const existingUser = await prisma.user.findUnique({
+    where: { user_id: hcbUserId },
+  });
+
+  if (existingUser) {
+    // Update existing user
+    return prisma.user.update({
+      where: { user_id: hcbUserId },
+      data: {
+        name: name ?? existingUser.name,
+        email: email ?? existingUser.email,
+        access_token: tokenData?.access_token ?? existingUser.access_token,
+        refresh_token: tokenData?.refresh_token ?? existingUser.refresh_token,
+        token_expires_at: expiresAtDate ?? existingUser.token_expires_at,
+      },
+    });
+  } else {
+    // Create new user
+    return prisma.user.create({
+      data: {
+        user_id: hcbUserId,
+        name,
+        email,
+        access_token: tokenData?.access_token,
+        refresh_token: tokenData?.refresh_token,
+        token_expires_at: expiresAtDate,
+      },
+    });
+  }
 }
 
 export async function updateUserTokens(
@@ -74,18 +73,20 @@ export async function updateUserTokens(
   tokenData: TokenData,
 ): Promise<void> {
   const expiresAtDate = new Date(tokenData.expires_at);
-  await query(
-    `UPDATE users
-     SET access_token = $1, refresh_token = $2, token_expires_at = $3
-     WHERE id = $4`,
-    [tokenData.access_token, tokenData.refresh_token, expiresAtDate, userId],
-  );
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      access_token: tokenData.access_token,
+      refresh_token: tokenData.refresh_token,
+      token_expires_at: expiresAtDate,
+    },
+  });
 }
 
 export async function getUserById(id: number): Promise<User | null> {
-  const result = await query(
-    "SELECT id, user_id, name, email, access_token, refresh_token, token_expires_at FROM users WHERE id = $1",
-    [id],
-  );
-  return result.rows[0] || null;
+  return prisma.user.findUnique({
+    where: { id },
+  });
 }
+
+export { prisma };

@@ -45,7 +45,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       const user = await findOrCreateUser(
         hcbUser.id.toString(), 
         hcbUser.name, 
-        hcbUser.email
+        hcbUser.email,
+        formattedTokenData // Pass token data directly to findOrCreateUser
       );
       
       // Create user session and redirect to dashboard

@@ -30,7 +30,7 @@ const ReciptsHelp = () => {
             <SheetDismissButton />
           </Sheet.Trigger>
           </div>
-          <div className="flex items-center justify-center pointer-events-none relative">
+          <div className="flex bg-[#F4B000] items-center justify-center pointer-events-none relative">
             <Rive 
               src="animations/receipts.riv" 
               stateMachines="State Machine 1" 

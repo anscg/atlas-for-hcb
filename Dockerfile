@@ -1,41 +1,28 @@
-FROM node:18 as build
-
+FROM node:18 AS base
 WORKDIR /app
 
-# Copy package file
+FROM base AS deps
+WORKDIR /app
 COPY package.json ./
+RUN npm install --legacy-peer-deps --omit=dev
 
-# Install dependencies using npm without requiring package-lock.json
-RUN npm install --legacy-peer-deps
-
-# Copy the rest of the application
-COPY . .
-
-# Generate Prisma client
-RUN npx prisma generate
-
-# Build the application
-RUN npm run build
-
-FROM node:18-slim as production
-
+FROM base AS build
 WORKDIR /app
-
-ENV NODE_ENV=production
-
-# Copy the build from the previous stage
-COPY --from=build /app/build ./build
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/prisma ./prisma
-
-# Generate Prisma client again in the production image
-RUN npm install --production=false --legacy-peer-deps
+COPY --from=deps /app/node_modules ./node_modules
+COPY prisma ./prisma
+COPY . .
+RUN npm install --legacy-peer-deps --include=dev
 RUN npx prisma generate
 RUN npm prune --production
+RUN npm run build
 
-# Expose the port that the app will run on
+FROM node:18-slim AS production
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/build ./build
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/prisma ./prisma
 EXPOSE 3000
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]
 
-# Start the app
-CMD ["npm", "run", "start"]

@@ -24,7 +24,8 @@ const ReciptsHelp = () => {
       }
       sheetContent={
         <div className={"relative"}>
-          <div className="absolute top-6 right-6 z-10">
+          <div className="absolute top-6 right-6 z-10" style={{ transform: 'translateZ(0)' }}
+          >
           <Sheet.Trigger asChild action="dismiss">
             <SheetDismissButton />
           </Sheet.Trigger>
@@ -36,12 +37,14 @@ const ReciptsHelp = () => {
               style={{ 
                 width: '100%', 
                 aspectRatio: '438/235',
+                zIndex: 0,
                 //maxWidth: '101%',
                 //display: 'block',
                 //margin: 'auto'
               }} 
             />
-            <div className="absolute bottom-6 left-8 leading-snug z-10 text-white">
+            <div className="absolute bottom-6 left-8 leading-snug z-10 text-white" style={{ transform: 'translateZ(0)' }}
+            >
               <p className="font-semibold text-[27px] select-none">About Receipts</p>
               <p className="opacity-80 font-regular text-[17px] select-none">Learn more about receipts.</p>
             </div>

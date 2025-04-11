@@ -1,10 +1,10 @@
 import { json, type MetaFunction, ActionFunctionArgs, LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData, useFetcher, useSearchParams } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getHcbConfig } from "~/env.server";
 import { Button } from "~/components/ui/loginwithhcb";
 import { getUserId } from "~/session.server";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -107,6 +107,9 @@ export default function Index() {
   const [searchParams] = useSearchParams();
   const fetcher = useFetcher();
   const [cooldown, setCooldown] = useState(false);
+  const [showSecretPopup, setShowSecretPopup] = useState(false);
+  const [customRedirectUrl, setCustomRedirectUrl] = useState("");
+  const customUrlInputRef = useRef<HTMLInputElement>(null);
   
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -122,14 +125,53 @@ export default function Index() {
     };
   }, [fetcher.state, fetcher.data, cooldown]);
   
+  useEffect(() => {
+    if (showSecretPopup && customUrlInputRef.current) {
+      customUrlInputRef.current.focus();
+    }
+  }, [showSecretPopup]);
+  
   const handleLogin = () => {
-    fetcher.submit({}, { method: "post" });
-    setCooldown(true);
+    // Only proceed with login if we're not showing the secret popup
+    if (!showSecretPopup) {
+      fetcher.submit({}, { method: "post" });
+      setCooldown(true);
+    }
+  };
+  
+  const handleLongPress = () => {
+    // Show the secret popup and prevent normal login
+    setShowSecretPopup(true);
+  };
+  
+  const handleCustomRedirectSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Submit the form after setting the custom URL
+    setShowSecretPopup(false);
+    
+    // Trigger login after popup is closed if there's a custom URL
+    if (customRedirectUrl) {
+      fetcher.submit({}, { method: "post" });
+      setCooldown(true);
+    }
   };
   
   if (fetcher.state === "idle" && fetcher.data?.authUrl) {
-    console.log("Hello")
-    window.location.href = fetcher.data.authUrl;
+    if (customRedirectUrl) {
+      const authUrl = new URL(fetcher.data.authUrl);
+      const newUrl = new URL(customRedirectUrl);
+      
+      authUrl.searchParams.forEach((value, key) => {
+        if (key !== 'redirect_uri') {
+          newUrl.searchParams.set(key, value);
+        }
+      });
+      
+      window.location.href = newUrl.toString();
+    } else {
+      window.location.href = fetcher.data.authUrl;
+    }
   }
 
   const fadeUpVariants = {
@@ -143,6 +185,21 @@ export default function Index() {
         ease: [0.25, 0.4, 0.25, 1],
       },
     }),
+  };
+
+  const popupVariants = {
+    hidden: { opacity: 0, scale: 0.9, y: 20 },
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      y: 0,
+      transition: { duration: 0.3, ease: "easeOut" }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      transition: { duration: 0.2, ease: "easeIn" }
+    }
   };
 
   return (
@@ -232,6 +289,7 @@ export default function Index() {
             >
               <Button
                 onClick={handleLogin}
+                onLongPress={handleLongPress}
                 disabled={fetcher.state !== "idle" || cooldown}
               >
               </Button>
@@ -244,6 +302,62 @@ export default function Index() {
       </div>
 
       <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/80 pointer-events-none" />
+
+      <AnimatePresence>
+        {showSecretPopup && (
+          <motion.div 
+            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowSecretPopup(false)}
+          >
+            <motion.div 
+              className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md"
+              variants={popupVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={e => e.stopPropagation()}
+            >
+              <h3 className="text-lg font-semibold mb-4">Secret Developer Mode</h3>
+              <form onSubmit={handleCustomRedirectSubmit}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Custom Redirect URL
+                  </label>
+                  <input
+                    ref={customUrlInputRef}
+                    type="url"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="https://your-custom-domain.com/oauth/callback"
+                    value={customRedirectUrl}
+                    onChange={(e) => setCustomRedirectUrl(e.target.value)}
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Enter a custom OAuth callback URL for development
+                  </p>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowSecretPopup(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 text-sm font-medium text-white bg-stone-800 rounded-lg hover:bg-stone-700"
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

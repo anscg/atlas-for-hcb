@@ -40,13 +40,16 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  onLongPress?: () => void
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, onLongPress, onClick, ...props }, ref) => {
     const Comp = asChild ? Slot : motion.button
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const [scaleValue, setScaleValue] = React.useState(0.95);
+    const longPressTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+    const [longPressDetected, setLongPressDetected] = React.useState(false);
     
     React.useEffect(() => {
       if (buttonRef.current) {
@@ -54,6 +57,54 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         setScaleValue(heightScale);
       }
     }, []);
+    
+    React.useEffect(() => {
+      // Reset long press flag after a brief delay
+      if (longPressDetected) {
+        const resetTimer = setTimeout(() => {
+          setLongPressDetected(false);
+        }, 500);
+        
+        return () => clearTimeout(resetTimer);
+      }
+    }, [longPressDetected]);
+    
+    const handlePointerDown = (e: React.PointerEvent) => {
+      if (onLongPress) {
+        longPressTimerRef.current = setTimeout(() => {
+          setLongPressDetected(true);
+          onLongPress();
+        }, 2000);
+      }
+      props.onPointerDown?.(e);
+    };
+    
+    const handlePointerUp = (e: React.PointerEvent) => {
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+        longPressTimerRef.current = null;
+      }
+      props.onPointerUp?.(e);
+    };
+    
+    const handlePointerLeave = (e: React.PointerEvent) => {
+      if (longPressTimerRef.current) {
+        clearTimeout(longPressTimerRef.current);
+        longPressTimerRef.current = null;
+      }
+      props.onPointerLeave?.(e);
+    };
+    
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      // Prevent normal click if long press was detected
+      if (longPressDetected) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      
+      onClick?.(e);
+    };
     
     return (
       <Comp
@@ -70,9 +121,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           stiffness: 700, 
           damping: 40,
         }}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerLeave}
+        onClick={handleClick}
         {...props}
       >
-        <img  src={HCBLogo} alt="HCB Logo" className="w-5 h-5 invert brightness-100 opacity-80" />
+        <img src={HCBLogo} alt="HCB Logo" className="w-5 h-5 invert brightness-100 opacity-80" />
         <span className="font-semibold opacity-95">Continue with HCB</span>
       </Comp>
     )

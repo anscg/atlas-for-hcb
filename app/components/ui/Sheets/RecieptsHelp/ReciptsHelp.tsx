@@ -42,8 +42,8 @@ const ReciptsHelp = () => {
               }} 
             />
             <div className="absolute bottom-6 left-8 leading-snug text-white">
-              <p className="font-semibold text-[27px]">About Receipts</p>
-              <p className="opacity-80 font-regular text-[17px]">Learn more about receipts</p>
+              <p className="font-semibold text-[27px] select-none">About Receipts</p>
+              <p className="opacity-80 font-regular text-[17px] select-none">Learn more about receipts</p>
             </div>
           </div>
           <div className="p-[2rem] flex justify-center gap-7 flex-col">
@@ -54,12 +54,12 @@ const ReciptsHelp = () => {
                 we ask you to upload all your receipts for funds that leave your 
                 HCB account.
               </p>
-              <p>
+              <p className="select-none">
               Please try to upload these receipts as soon as possible. 
               This receipt could be a screenshot, download email, 
               or a picture of a physical receipts. 
               </p>
-              <a href="http://help.hcb.hackclub.com/article/28-how-do-i-upload-receipts" className="opacity-100 text-[#33B9F2]" >Learn more.</a>
+              <a href="http://help.hcb.hackclub.com/article/28-how-do-i-upload-receipts" className="opacity-100 text-[#33B9F2] select-none" >Learn more.</a>
             </div>
           <Sheet.Trigger asChild action="dismiss">
           <HeroButton variant="default"

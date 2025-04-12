@@ -94,7 +94,7 @@ export default function Dashboard() {
         />
       </div>*/}
 
-      <div className="sm:max-w-md w-screen h-screen relative z-0">
+      <div className="sm:max-w-md w-screen h-screen relative z-0 padding-for-notch">
         <header
           className="sticky top-0 left-0 z-50 w-full bg-white"
           aria-label="Main Navigation"

@@ -1,5 +1,6 @@
 .ExamplePage-scrollView {
     height: 100%;
+    padding-top: env(safe-area-inset-top, 0px);
   }
   
   .ExamplePage-article {

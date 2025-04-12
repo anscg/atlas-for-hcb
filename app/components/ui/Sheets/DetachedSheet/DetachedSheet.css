@@ -7,7 +7,8 @@
 
 .DetachedSheet-content {
    /* SELF-LAYOUT */
-   height: calc(auto + env(safe-area-inset-bottom, 0px));
+   height: auto;
+   padding-bottom: max(0px, env(safe-area-inset-bottom, 0px));
    min-height: 200px;
 
    /* APPEARANCE */

@@ -49,8 +49,8 @@ const ReciptsHelp = () => {
               <p className="opacity-80 font-regular text-[17px] select-none">Learn more about receipts.</p>
             </div>
           </div>
-          <div className="p-[1.2rem] flex justify-center gap-7 flex-col">
-            <div className="font-medium px-3 pt-3 text-[#999] space-y-5 leading-[1.3] text-[1.04rem]">
+          <div className="p-[1.8rem] flex justify-center gap-7 flex-col">
+            <div className="font-medium px-2 text-[#999] space-y-5 leading-[1.3] text-[1.04rem]">
               <p className="select-none">
                 Since HCB have a requirement with the IRS to show all our receipts 
                 and your organization is underneath ours through fiscal sponsorship, 

@@ -8,14 +8,16 @@
 .DetachedSheet-content {
    /* SELF-LAYOUT */
    height: auto;
-   padding-bottom: max(0px, env(safe-area-inset-bottom, 0px));
+   /* Replace single padding declaration with individual sides */
+   padding: 18px 18px 0 18px; /* top, right, bottom, left */
+   /* Add safe area inset as separate padding-bottom */
+   padding-bottom: max(18px, env(safe-area-inset-bottom, 18px));
    min-height: 200px;
 
    /* APPEARANCE */
    background-color: transparent;
 
    /* INNER-LAYOUT */
-   padding: 18px;
 }
 
 .DetachedSheet-innerContent {

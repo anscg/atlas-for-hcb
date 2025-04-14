@@ -5,6 +5,7 @@ import "./receiptspage.css";
 import { AnimatedBaseButton } from "./animatedbasebutton";
 import { SheetDismissButton } from "./Button/SheetDismissButton";
 import { ReciptsHelp } from "./Sheets/RecieptsHelp/ReciptsHelp";
+import ReceiptsListItem from "./Dashboard/Receipts/ReceiptsListItem";
 
 const ReceiptsPage = () => {
   return (
@@ -67,6 +68,15 @@ const ReceiptsPage = () => {
                     <p className="mt-4 text-sm text-gray-500">
                       Loading receipts...
                     </p>
+                    <ReceiptsListItem
+                      amount="0.00"
+                      memo="Loading..."
+                      orgIcon=""
+                      source="Loading..."
+                      itemIcon={
+                        <div className="w-10 h-10 rounded-full bg-gray-200 animate-pulse"></div>
+                      }
+                    />
                   </div>
                 </div>
               </Scroll.Content>
